@@ -16,7 +16,7 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 #pygame.mixer.music.play(-1)
 
 
-pygame.display.set_caption('Tanks - Amar')
+pygame.display.set_caption('Tanks')
 
 icon = pygame.image.load("ic.jpg")
 pygame.display.set_icon(icon)
@@ -39,8 +39,8 @@ light_green = (0, 255, 0)
 #--------------------------------for picking current time for the frames per second----------------------
 clock = pygame.time.Clock()
 #--------------------------------geometry of tank and its turret------------------------------------------
-tankWidth = 40
-tankHeight = 20
+tankWidth = 20
+tankHeight = 10
 
 turretWidth = 5
 wheelWidth = 5
@@ -169,9 +169,28 @@ def game_controls():
         message_to_screen("Press D to raise Power % AND Press A to lower Power % ", wheat, 140)
         message_to_screen("Pause: P", wheat, 90)
 
+def game_changelogs():
+    gchange = True
+
+    while gchange:
+        for event in pygame.event.get():
+            # print(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        gameDisplay.fill(black)
+        message_to_screen("Changelogs", white, -100, size="large")
+        message_to_screen("Improved tank UI", wheat, -30)
+        message_to_screen("Rendered frame rate to 30 FPS.", wheat, 10)
+        message_to_screen("...", wheat, 50)
+        message_to_screen("...", wheat, 140)
+        message_to_screen("...", wheat, 90)
+
         button("Play", 150, 500, 100, 50, green, light_green, action="play")
         button("Main", 350, 500, 100, 50, yellow, light_yellow, action="main")
         button("Quit", 550, 500, 100, 50, red, light_red, action="quit")
+        button("Changelogs", 350, 100, 100, 50, wheat, light_yellow, action="Changelogs", size="vsmall")
 
         pygame.display.update()
 
@@ -198,6 +217,8 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
             if action == "main":
                 game_intro()
 
+            if action == "Changelogs":
+                game_changelogs()
     else:
         pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
 
@@ -207,7 +228,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
 def pause():
     paused = True
     message_to_screen("Paused", white, -100, size="large")
-    message_to_screen("Press C to continue playing or Q to quit", wheat, 25)
+    message_to_screen("Press R to continue playing or Q to quit", wheat, 25)
     pygame.display.update()
     while paused:
         #gameDisplay.fill(black)
@@ -217,7 +238,7 @@ def pause():
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_c:
+                if event.key == pygame.K_r:
                     paused = False
                 elif event.key == pygame.K_q:
                     pygame.quit()
@@ -242,7 +263,7 @@ def explosion(x, y, size=50):
 
         startPoint = x, y
 
-        colorChoices = [red, light_red, yellow, light_yellow]
+        colorChoices = [red, light_red, yellow, light_yellow, light_green]
 
         magnitude = 1
 
@@ -464,13 +485,16 @@ def game_intro():
         message_to_screen("The objective is to shoot and destroy", wheat, 15)
         message_to_screen("the enemy tank before they destroy you.", wheat, 60)
         message_to_screen("The more enemies you destroy, the harder they get.", wheat, 110)
-        message_to_screen("Created by :- Amar Kumar", wheat, 280)
+        message_to_screen("Created by :- Charan", wheat, -280)
+        message_to_screen("Version 1.2", wheat, 280)
+        message_to_screen("PLEASE DO NOT PRESS CONTROLS BUTTON OR MAIN BUTTON", wheat, -240)
         # message_to_screen("Press C to play, P to pause or Q to quit",black,180)
 
 
         button("Play", 150, 500, 100, 50, wheat, light_green, action="play",size="vsmall")
-        button("Controls", 350, 500, 100, 50, wheat, light_yellow, action="controls",size="vsmall")
-        button("Quit", 550, 500, 100, 50, wheat, light_red, action="quit",size="vsmall")
+        button("Controls", 350, 500, 100, 50, wheat, light_yellow, action="controls", size="vsmall")
+        button("Quit", 550, 500, 100, 50, wheat, light_red, action="quit", size="vsmall")
+        button("Changelogs", 350, 100, 100, 50, wheat, light_yellow, action="Changelogs", size="vsmall")
 
         pygame.display.update()
 
@@ -490,6 +514,7 @@ def game_over():
         gameDisplay.fill(black)
         message_to_screen("Game Over", white, -100, size="large")
         message_to_screen("You died.", wheat, -30)
+        message_to_screen("Your score - 0............................AI's score - 1 ", wheat, 20)
 
         button("Play Again", 150, 500, 150, 50, wheat, light_green, action="play")
         button("Controls", 350, 500, 100, 50, wheat, light_yellow, action="controls")
@@ -513,6 +538,7 @@ def you_win():
         gameDisplay.fill(black)
         message_to_screen("You won!", white, -100, size="large")
         message_to_screen("Congratulations!", wheat, -30)
+        message_to_screen("Your score - 1............................AI score - 0 ", wheat, 20)
 
         button("play Again", 150, 500, 150, 50, wheat, light_green, action="play")
         button("controls", 350, 500, 100, 50, wheat, light_yellow, action="controls")
@@ -545,7 +571,7 @@ def health_bars(player_health, enemy_health):
 def gameLoop():
     gameExit = False
     gameOver = False
-    FPS = 15
+    FPS = 30
 
     player_health = 100
     enemy_health = 100
